@@ -18,6 +18,8 @@
 # https://gitlab.com/adamthiede/signal-desktop-builder/-/blob/master/patches/0001-Remove-no-sandbox-patch.patch?ref_type=heads
 # https://github.com/BernardoGiordano/signal-desktop-pi4/blob/master/install.sh
 # https://github.com/tianon/dockerfiles/blob/master/signal-desktop/Dockerfile
+## Flatpak
+# https://github.com/signalflatpak/signal
 
 
 VERSION_TO_BUILD='7.31.0'
@@ -25,11 +27,15 @@ VERSION_TO_BUILD='7.31.0'
 ## System Tray
 #apt-get install gnome-shell-extension-appindicator
 
-## Requirements
+## Build depends
 apt-get update && apt-get upgrade -y
 apt-get install rsync build-essential libssl-dev curl git git-lfs wget vim fuse-overlayfs python3-full locales dialog libcrypto++-dev libcrypto++8 libgtk-3-0 libgtk-3-dev libvips42 libxss-dev snapd bc screen libffi-dev libglib2.0-0 libnss3 libatk1.0-0 libatk-bridge2.0-0 libx11-xcb1 libgdk-pixbuf-2.0-0 libdrm2 libgbm1 ruby ruby-dev clang llvm lld clang-tools generate-ninja ninja-build pkg-config tcl
+
+## Runtime depends # Got using dpkg -I on a compiled
+## libnotify4 libxtst6 libnss3 libasound2 libxss1 libc6>= 2.31 libgtk-3-0 libgbm1 libx11-xcb1 libappindicator3-1
+
 # Optional:
-# apt install podman flatpak elfutils slirp4netns rootlesskit binfmt-support flatpak-builder qemu-user-statica 
+# apt install flatpak elfutils slirp4netns rootlesskit flatpak-builder
 
 ## Install fpm is required to avoud errors on yanr install
 gem install fpm
@@ -59,8 +65,10 @@ git-lfs install
 #git config --global user.name <user>
 #git config --global user.email <email>
 
-## Apply Droidian patches
-git apply ../patches/droidian/7140-1_Fix-settings-window-size-small-screens.patch
+## Apply small screens patches
+git apply ../patches/droidian/7310-01_Fix-Minimize-gutter-on-small-screens.patch
+git apply ../patches/droidian/7310-03_Fix-settings-window-size-small-screens.patch
+git apply ../patches/droidian/7310-02_Fix-Always-return-MIN_WIDTH-from-storage.patch
 
 ## Prepare nvm
 nvm use
@@ -68,7 +76,7 @@ nvm install
 nvm use
 
 ## Install yarn
-install --global yarn
+npm install --global yarn
 #NO npm install node-abi@latest
 
 ## Ensure required vars export
