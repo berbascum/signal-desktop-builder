@@ -1,0 +1,25 @@
+From 645403fb674f57c1c617cf51c3ebeaee7534f83e Mon Sep 17 00:00:00 2001
+From: berbascum <berbascum@ticv.cat>
+Date: Sun, 7 Jul 2024 15:13:25 +0200
+Subject: [PATCH] Fix: Minimize-gutter-on-small-screens thanks to Adam Thiede
+
+---
+ ts/state/selectors/items.ts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ts/state/selectors/items.ts b/ts/state/selectors/items.ts
+index a3a001a6e..9c6f6b1f0 100644
+--- a/ts/state/selectors/items.ts
++++ b/ts/state/selectors/items.ts
+@@ -20,7 +20,7 @@ import { DurationInSeconds } from '../../util/durations';
+ import * as Bytes from '../../Bytes';
+ import { contactByEncryptedUsernameRoute } from '../../util/signalRoutes';
+ 
+-const DEFAULT_PREFERRED_LEFT_PANE_WIDTH = 320;
++const DEFAULT_PREFERRED_LEFT_PANE_WIDTH = 109;
+ 
+ export const getItems = (state: StateType): ItemsStateType => state.items;
+ 
+-- 
+2.45.1
+

@@ -1,0 +1,43 @@
+From 9a561b682a02db69e771550234b293e1f7a5c8db Mon Sep 17 00:00:00 2001
+From: berbascum <berbascum@ticv.cat>
+Date: Sun, 7 Jul 2024 15:24:41 +0200
+Subject: [PATCH] Fix: Always-return-MIN_WIDTH-from-storage thanks to Adam
+ Thiede
+
+---
+ ts/components/LeftPane.stories.tsx | 2 +-
+ ts/util/leftPaneWidth.ts           | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/ts/components/LeftPane.stories.tsx b/ts/components/LeftPane.stories.tsx
+index 0b63dff77..1d048f1bf 100644
+--- a/ts/components/LeftPane.stories.tsx
++++ b/ts/components/LeftPane.stories.tsx
+@@ -150,7 +150,7 @@ const useProps = (overrideProps: OverridePropsType = {}): PropsType => {
+     hasPendingUpdate: false,
+     i18n,
+     isMacOS: false,
+-    preferredWidthFromStorage: 320,
++    preferredWidthFromStorage: 97,
+     challengeStatus: 'idle',
+     crashReportCount: 0,
+ 
+diff --git a/ts/util/leftPaneWidth.ts b/ts/util/leftPaneWidth.ts
+index 587fce0c0..6c1daa406 100644
+--- a/ts/util/leftPaneWidth.ts
++++ b/ts/util/leftPaneWidth.ts
+@@ -20,9 +20,9 @@ export function getWidthFromPreferredWidth(
+ ): number {
+   const clampedWidth = clamp(preferredWidth, MIN_WIDTH, MAX_WIDTH);
+ 
++  return MIN_WIDTH;
++
+   if (requiresFullWidth || clampedWidth >= SNAP_WIDTH) {
+     return Math.max(clampedWidth, MIN_FULL_WIDTH);
+   }
+-
+-  return MIN_WIDTH;
+ }
+-- 
+2.45.1
+
