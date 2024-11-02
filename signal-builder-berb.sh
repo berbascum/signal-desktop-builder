@@ -98,7 +98,7 @@ fi
 ## Install yarn
 yarn install --frozen-lockfile
 ## Disable --no-sandbox on the desktop link and enable Wayland compat
-sed -i 's/^                exec += \" --no-sandbox %U\";/                exec += "--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations %U";/g' node_modules/app-builder-lib/out/targets/LinuxTargetHelper.js 
+sed -i 's/^                exec += \" --no-sandbox %U\";/                exec += " --ozone-platform-hint=auto --enable-features=WaylandWindowDecorations %U";/g' node_modules/app-builder-lib/out/targets/LinuxTargetHelper.js 
 
 ## Build
 yarn generate
