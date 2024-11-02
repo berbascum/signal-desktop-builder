@@ -2,10 +2,10 @@
 
 ## Script to compile signal-desktop from/for arm64 packaged for debian
 #
-## Version 1.0.1
+## Version 1.0.2
 #
-# Upstream-Name: Signal-Desktop-arm64
-# Source: https://github.com/berbascum/Signal-Desktop-arm64
+# Upstream-Name: signal-desktop-builder
+# Source: https://github.com/berbascum/signal-desktop-builder
 #
 # Copyright (C) 2024 Berbascum <berbascum@ticv.cat>
 # All rights reserved.
@@ -19,13 +19,15 @@
 # https://github.com/BernardoGiordano/signal-desktop-pi4/blob/master/install.sh
 # https://github.com/tianon/dockerfiles/blob/master/signal-desktop/Dockerfile
 
-VERSION_TO_BUILD='7.14.0'
+
+VERSION_TO_BUILD='7.31.0'
 
 ## System Tray
-# apt-get install gnome-shell-extension-appindicator
+#apt-get install gnome-shell-extension-appindicator
 
 ## Requirements
-apt-get install rsync build-essential libssl-dev curl git git-lfs wget vim fuse-overlayfs python3-full locales dialog libcrypto++-dev libcrypto++8 libgtk-3-dev libvips42 libxss-dev snapd bc screen libffi-dev libglib2.0-0 libnss3 libatk1.0-0 libatk-bridge2.0-0 libx11-xcb1 libgdk-pixbuf-2.0-0 libgtk-3-0 libdrm2 libgbm1 ruby ruby-dev curl clang llvm lld clang-tools generate-ninja ninja-build pkg-config tcl
+apt-get update && apt-get upgrade -y
+apt-get install rsync build-essential libssl-dev curl git git-lfs wget vim fuse-overlayfs python3-full locales dialog libcrypto++-dev libcrypto++8 libgtk-3-0 libgtk-3-dev libvips42 libxss-dev snapd bc screen libffi-dev libglib2.0-0 libnss3 libatk1.0-0 libatk-bridge2.0-0 libx11-xcb1 libgdk-pixbuf-2.0-0 libdrm2 libgbm1 ruby ruby-dev clang llvm lld clang-tools generate-ninja ninja-build pkg-config tcl
 # Optional:
 # apt install podman flatpak elfutils slirp4netns rootlesskit binfmt-support flatpak-builder qemu-user-statica 
 
@@ -37,12 +39,20 @@ export PATH="/Signal-Desktop/node_modules/.bin:/root/.cargo/bin:/opt/node/bin:/u
 
 ## Install nvm
 curl -o- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-## source /root/.bashrc required or session restart
+## Load nvm vars
+source /root/.bashrc ##required or session restart
 
 ## Clone signal desktop
-git clone  https://github.com/signalapp/Signal-Desktop.git
+[ -d "Signal-Desktop" ] || git clone https://github.com/signalapp/Signal-Desktop.git
+## Grant accés to root
+git config --global --add safe.directory /buildd/sources/Signal-Desktop
+## Enter to the source dir
 cd Signal-Desktop
+## Checkout to the version to build
+curr_branch=$(git branch | grep ${VERSION_TO_BUILD})
+[ -z "${curr_branch}" ] && git checkout -b build-${VERSION_TO_BUILD} v${VERSION_TO_BUILD}
 
+## Enable git lfs
 git-lfs install
 
 ## Config sources
@@ -50,7 +60,7 @@ git-lfs install
 #git config --global user.email <email>
 
 ## Apply Droidian patches
-git apply patches/droidian/7140-1_Fix-settings-window-size-small-screens.patch
+git apply ../patches/droidian/7140-1_Fix-settings-window-size-small-screens.patch
 
 ## Prepare nvm
 nvm use
@@ -58,13 +68,24 @@ nvm install
 nvm use
 
 ## Install yarn
-npm install --global yarn
-
-#npm install node-abi@latest
+install --global yarn
+#NO npm install node-abi@latest
 
 ## Ensure required vars export
 export PATH="/Signal-Desktop/node_modules/.bin:/root/.cargo/bin:/opt/node/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 export USE_SYSTEM_FPM=true
+
+## Check detected patches with version mismatch
+## Module socks-proxy-agent
+module_name='socks-proxy-agent'
+mod_expected_ver="$(ls patches | grep "${module_name}" | awk -F '+' '{print $2}' | awk -F'.patch' '{print $1}')"
+patch_filename="${module_name}+${mod_expected_ver}.patch"
+mod_installed_ver="$(npm list -g ${module_name} | grep "${module_name}@" | awk -F'@' '{print $2}')"
+if [[ "${mod_expected_ver}" == '8.0.1' \
+   && "${mod_installed_ver}" == '8.0.4' ]]; then
+    read -p "Detected incompatible patch v${mod_expected_ver} with installed v${mod_installed_ver}"
+    rm -vf patches/${patch_filename}
+fi
 
 ## Install yarn
 yarn install --frozen-lockfile
