@@ -66,8 +66,7 @@ git-lfs install
 #git config --global user.email <email>
 
 ## Replace the notification sound file
-cp -v ../sounds/notification.ogg sounds/notification.ogg
-cp -v ../sounds/notification.ogg sounds/notification_simple-01.ogg
+cp -v ../sounds/pop.ogg sounds/pop.ogg
 ## Apply small screens patches
 git apply ../patches/droidian/7310-01_Fix-Minimize-gutter-on-small-screens.patch
 git apply ../patches/droidian/7310-03_Fix-settings-window-size-small-screens.patch
