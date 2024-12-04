@@ -47,7 +47,7 @@ export USE_SYSTEM_FPM=true ## Should be defined for yarn build
 export PATH="/Signal-Desktop/node_modules/.bin:/root/.cargo/bin:/opt/node/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 
 ## Install nvm
-curl -o- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 ## Load nvm vars
 source /root/.bashrc ##required or session restart
 
