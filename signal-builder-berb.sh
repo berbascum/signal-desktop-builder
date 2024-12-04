@@ -21,8 +21,8 @@
 ## Flatpak
 # https://github.com/signalflatpak/signal
 
-
 VERSION_TO_BUILD='7.34.0'
+VERSION_BRANCH='7.34.x'
 
 ## System Tray
 #apt-get install gnome-shell-extension-appindicator
@@ -48,22 +48,22 @@ curl -o- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | ba
 ## Load nvm vars
 source /root/.bashrc ##required or session restart
 
-## Clone signal desktop
-[ -d "Signal-Desktop" ] || git clone https://github.com/signalapp/Signal-Desktop.git
-## Grant accés to root
-git config --global --add safe.directory /buildd/sources/Signal-Desktop
+## Clone signal desktop conditionally
+[ -d "Signal-Desktop" ] || (git clone -b ${VERSION_BRANCH} https://github.com/signalapp/Signal-Desktop.git&& git-lfs install && git config --global --add safe.directory /buildd/sources/Signal-Desktop)
+## Config sources
+# git config --global user.name <user>
+# git config --global user.email <email>
+
 ## Enter to the source dir
 cd Signal-Desktop
-## Checkout to the version to build
-curr_branch=$(git branch | grep ${VERSION_TO_BUILD})
-[ -z "${curr_branch}" ] && git checkout -b build-${VERSION_TO_BUILD} v${VERSION_TO_BUILD}
 
 ## Enable git lfs
 git-lfs install
 
-## Config sources
-#git config --global user.name <user>
-#git config --global user.email <email>
+## Checkout to the version to build
+on_branch="$(git status | grep "On branch")"
+head_detached="$(git status | grep "HEAD detached at v${VERSION_TO_BUILD}")"
+[ -n "${on_branch}" ] && git checkout v${VERSION_TO_BUILD}
 
 ## Replace the notification sound file
 cp -v ../sounds/pop.ogg sounds/pop.ogg
