@@ -22,7 +22,7 @@
 # https://github.com/signalflatpak/signal
 
 
-VERSION_TO_BUILD='7.31.0'
+VERSION_TO_BUILD='7.34.0'
 
 ## System Tray
 #apt-get install gnome-shell-extension-appindicator
