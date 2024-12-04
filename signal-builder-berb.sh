@@ -28,8 +28,11 @@ VERSION_BRANCH='7.34.x'
 #apt-get install gnome-shell-extension-appindicator
 
 ## Build depends
-apt-get update && apt-get upgrade -y
-apt-get install rsync build-essential libssl-dev curl git git-lfs wget vim fuse-overlayfs python3-full locales dialog libcrypto++-dev libcrypto++8 libgtk-3-0 libgtk-3-dev libvips42 libxss-dev snapd bc screen libffi-dev libglib2.0-0 libnss3 libatk1.0-0 libatk-bridge2.0-0 libx11-xcb1 libgdk-pixbuf-2.0-0 libdrm2 libgbm1 ruby ruby-dev clang llvm lld clang-tools generate-ninja ninja-build pkg-config tcl
+apt-get update
+apt-get install git-lfs
+## Depends from apt are installed in the docker image
+#apt-get update && apt-get upgrade -y
+#apt-get install rsync build-essential libssl-dev curl git git-lfs wget vim fuse-overlayfs python3-full locales dialog libcrypto++-dev libcrypto++8 libgtk-3-0 libgtk-3-dev libvips42 libxss-dev snapd bc screen libffi-dev libglib2.0-0 libnss3 libatk1.0-0 libatk-bridge2.0-0 libx11-xcb1 libgdk-pixbuf-2.0-0 libdrm2 libgbm1 ruby ruby-dev clang llvm lld clang-tools generate-ninja ninja-build pkg-config tcl
 
 ## Runtime depends # Got using dpkg -I on a compiled
 ## libnotify4 libxtst6 libnss3 libasound2 libxss1 libc6>= 2.31 libgtk-3-0 libgbm1 libx11-xcb1 libappindicator3-1
